@@ -34,7 +34,7 @@ namespace Clock
                 labelTime.Text += $"\n{DateTime.Now.ToString("yyyy.MM.dd")}";
             if(checkBoxShowWeekDay.Checked)
                 labelTime.Text += $"\n{DateTime.Now.DayOfWeek}";
-
+            notifyIcon.Text = labelTime.Text;
 
         }
         void SetVisibility(bool visible)
