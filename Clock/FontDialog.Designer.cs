@@ -44,6 +44,7 @@
             this.comboBoxFonts.Name = "comboBoxFonts";
             this.comboBoxFonts.Size = new System.Drawing.Size(489, 21);
             this.comboBoxFonts.TabIndex = 0;
+            this.comboBoxFonts.SelectedIndexChanged += new System.EventHandler(this.comboBoxFonts_SelectedIndexChanged);
             // 
             // numericUpDownFontSize
             // 
@@ -66,6 +67,7 @@
             0,
             0,
             0});
+            this.numericUpDownFontSize.ValueChanged += new System.EventHandler(this.numericUpDownFontSize_ValueChanged);
             // 
             // labelExample
             // 
