@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using Microsoft.Win32;
 namespace Clock
 {
     public partial class MainForm : Form
@@ -108,6 +108,16 @@ namespace Clock
             {
                 labelTime.Font = fontDialog.Font;
             }
+        }
+
+        private void tsmiAutorun_CheckedChanged(object sender, EventArgs e)
+        {
+            string key_name = "Clock_PV_522";
+            RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true); //true -
+            if (tsmiAutorun.Checked) rk.SetValue(key_name, Application.ExecutablePath);
+            else rk.DeleteValue(key_name, false);
+            //false - Не бросать исключение при отсутствии удаляемой ветки.
+            rk.Dispose();
         }
     }
     

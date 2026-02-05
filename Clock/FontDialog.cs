@@ -15,17 +15,23 @@ namespace Clock
 {
     public partial class FontDialog : Form
     {
+        PrivateFontCollection pfc;
         MainForm parent;
+        Dictionary<string, string> fonts;
+
         public Font Font { get; private set; }
         public FontDialog(MainForm parent)
         {
             InitializeComponent();
+            pfc = null;
             this.StartPosition = FormStartPosition.Manual;
             this.parent = parent;
+            fonts = new Dictionary<string, string>();
+            LoadFonts();
         }
         void LoadFonts()
         {
-            AllocConsole();     
+           // AllocConsole();     
             Console.WriteLine(Application.ExecutablePath);
             //Directory.SetCurrentDirectory($"{Application.ExecutablePath}");
             Directory.SetCurrentDirectory($"{Application.ExecutablePath}\\..\\..\\..\\Fonts");
@@ -33,7 +39,8 @@ namespace Clock
             Console.WriteLine(Directory.GetCurrentDirectory());
             //LoadFonts(Directory.GetCurrentDirectory(), "*.ttf");
             //LoadFonts(Directory.GetCurrentDirectory(), "*.otf");
-            Traverse(Directory.GetCurrentDirectory())  ;
+            Traverse(Directory.GetCurrentDirectory());
+            comboBoxFonts.Items.AddRange(fonts.Keys.ToArray());
         }
         void LoadFonts(string path, string extension)
         {
@@ -41,9 +48,11 @@ namespace Clock
             for (int i = 0; i < files.Length; i++)
             {
                 // files[i] = Path.GetFileName(files[i]);
-                files[i] = files[i].Split('\\').Last();
+                //files[i] = files[i].Split('\\').Last();
+                if (fonts.ContainsKey(files[i].Split('\\').Last())) continue;
+                fonts.Add(files[i].Split('\\').Last()/*.Split('.').First()*/, files[i]);
             }
-            comboBoxFonts.Items.AddRange(files);
+           //comboBoxFonts.Items.AddRange(files);
         }
         void Traverse(string path)
         {
@@ -61,13 +70,14 @@ namespace Clock
         [DllImport("kernel32.dll")]
         public static extern void FreeConsole();
         private void FontDialog_Load(object sender, EventArgs e)
+
         {
             this.Location = new Point
                 (
                 this.parent.Location.X - this.Width/4,
                 this.parent.Location.Y + 100
                 );
-            LoadFonts();
+            //LoadFonts();
         }
         private void buttonOK_Click(object sender, EventArgs e )
         {
@@ -76,8 +86,10 @@ namespace Clock
 
         private void ApplyFontExample()
         {
-            PrivateFontCollection pfc = new PrivateFontCollection();
-            pfc.AddFontFile(comboBoxFonts.SelectedItem.ToString());
+            if (pfc != null) pfc.Dispose();
+            pfc = new PrivateFontCollection();
+            //PrivateFontCollection pfc = new PrivateFontCollection();
+            pfc.AddFontFile(fonts[comboBoxFonts.SelectedItem.ToString()]);
             labelExample.Font = new Font(pfc.Families[0], (float)numericUpDownFontSize.Value);
         }
         private void comboBoxFonts_SelectedIndexChanged(object sender, EventArgs e)
