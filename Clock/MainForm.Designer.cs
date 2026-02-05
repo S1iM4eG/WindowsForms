@@ -87,7 +87,7 @@
             this.toolStripSeparator5,
             this.tsmiExit});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(181, 254);
+            this.contextMenuStrip.Size = new System.Drawing.Size(159, 232);
             // 
             // tsmiTopmost
             // 
@@ -262,6 +262,7 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Clock PV_522";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

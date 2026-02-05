@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.IO;        //Input, Output
 using System.Runtime.InteropServices;
 using System.Drawing.Text;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Clock
 {
@@ -20,13 +21,14 @@ namespace Clock
         Dictionary<string, string> fonts;
 
         public Font Font { get; private set; }
+        public string FontFile { get; set; }
         public FontDialog(MainForm parent)
         {
             InitializeComponent();
             pfc = null;
+            fonts = new Dictionary<string, string>();
             this.StartPosition = FormStartPosition.Manual;
             this.parent = parent;
-            fonts = new Dictionary<string, string>();
             LoadFonts();
         }
         void LoadFonts()
@@ -79,9 +81,10 @@ namespace Clock
                 );
             //LoadFonts();
         }
-        private void buttonOK_Click(object sender, EventArgs e )
+        private void buttonOK_Click(object sender, EventArgs e)
         {
             this.Font = labelExample.Font;
+            this.FontFile = fonts[comboBoxFonts.SelectedItem.ToString()];
         }
 
         private void ApplyFontExample()
