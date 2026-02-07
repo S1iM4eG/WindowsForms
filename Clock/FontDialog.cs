@@ -19,14 +19,23 @@ namespace Clock
         PrivateFontCollection pfc;
         MainForm parent;
         Dictionary<string, string> fonts;
-
+        float fontSize;
         public Font Font { get; private set; }
         public string FontFile { get; set; }
-        public FontDialog(MainForm parent)
+        public float FontSize 
+        { 
+            get => fontSize;
+            set => numericUpDownFontSize.Value = (decimal)(fontSize =
+                value < (float)numericUpDownFontSize.Minimum ? (float)numericUpDownFontSize.Maximum :
+                value > (float)numericUpDownFontSize.Maximum ? (float)numericUpDownFontSize.Minimum :
+                value);
+        }
+        public FontDialog(MainForm parent, string fontFile)
         {
             InitializeComponent();
             pfc = null;
             fonts = new Dictionary<string, string>();
+            this.FontFile = fontFile;
             this.StartPosition = FormStartPosition.Manual;
             this.parent = parent;
             LoadFonts();
@@ -43,6 +52,8 @@ namespace Clock
             //LoadFonts(Directory.GetCurrentDirectory(), "*.otf");
             Traverse(Directory.GetCurrentDirectory());
             comboBoxFonts.Items.AddRange(fonts.Keys.ToArray());
+            //comboBoxFonts.SelectedIndex = 0;
+            comboBoxFonts.SelectedItem = this.FontFile.Split('\\').Last();
         }
         void LoadFonts(string path, string extension)
         {
@@ -86,6 +97,7 @@ namespace Clock
         {
             this.Font = labelExample.Font;
             this.FontFile = fonts[comboBoxFonts.SelectedItem.ToString()];
+            this.FontSize = (float)numericUpDownFontSize.Value;
         }
 
         public Font ApplyFontExample(string filename)
