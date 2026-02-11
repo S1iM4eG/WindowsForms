@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
+using System.Runtime.InteropServices;
+
 namespace Clock
 {
     public partial class MainForm : Form
@@ -17,9 +19,12 @@ namespace Clock
         ColorDialog backgroundDialog;
         ColorDialog foregroundDialog;
         FontDialog fontDialog;
+        bool mouseDown = false;
+        Point mouseLocation;
         public MainForm()
         {
             InitializeComponent();
+            //AllocConsole();
             this.Location = new Point
                 (
                     Screen.PrimaryScreen.Bounds.Width - this.Width - 50,
@@ -31,6 +36,10 @@ namespace Clock
             //fontDialog = new FontDialog(this);
             LoadSettings();
         }
+        [DllImport("kernel32.dll")]
+        public static extern bool AllocConsole();
+        [DllImport("kernel32.dll")]
+        public static extern bool FreeConsole();
         void SaveSettings()
         {
             Directory.SetCurrentDirectory($"{Application.ExecutablePath}\\..\\..\\..");
@@ -177,6 +186,39 @@ namespace Clock
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveSettings();
+        }
+
+        private void labelTime_MouseMove(object sender, MouseEventArgs e)
+        {
+            //if (mouseDown) this.Location = e.Location;
+            //Console.WriteLine($"MouseMove: Window:{this.Location.X}{this.Location.Y};Mouse:{e.X}x{e.Y};MouseLocation");
+            Console.WriteLine($"Windows location:{this.Location};\tCursor position:{Cursor.Position}");
+            if (mouseDown) this.Location = new Point
+                (
+                    Cursor.Position.X - mouseLocation.X,
+                    Cursor.Position.Y - mouseLocation.Y
+                );
+            Console.WriteLine( new Point
+                (
+                    Cursor.Position.X - e.Location.X,
+                    Cursor.Position.Y - e.Location.Y
+                ));
+            Console.WriteLine("\n=========================================\n");
+        }
+
+        private void labelTime_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                mouseDown = true;
+                mouseLocation = new Point(e.Location.X, e.Location.Y);
+            }
+            
+        }
+
+        private void labelTime_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left) mouseDown = false;
         }
     }
     
